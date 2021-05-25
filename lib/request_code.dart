@@ -4,10 +4,10 @@ import 'model/config.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 class RequestCode {
-  final StreamController<String> _onCodeListener = StreamController();
+  final StreamController<String?> _onCodeListener = StreamController();
   final FlutterWebviewPlugin _webView = FlutterWebviewPlugin();
   final Config _config;
-  AuthorizationRequest _authorizationRequest;
+  late AuthorizationRequest _authorizationRequest;
 
   var _onCodeStream;
 
@@ -46,7 +46,7 @@ class RequestCode {
   }
 
   void sizeChanged() {
-    _webView.resize(_config.screenSize);
+    _webView.resize(_config.screenSize!);
   }
 
   Future<void> clearCookies() async {
@@ -60,10 +60,10 @@ class RequestCode {
   String _constructUrlParams() =>
       _mapToQueryParams(_authorizationRequest.parameters);
 
-  String _mapToQueryParams(Map<String, String> params) {
+  String _mapToQueryParams(Map<String, String?> params) {
     final queryParams = <String>[];
     params
-        .forEach((String key, String value) => queryParams.add('$key=$value'));
+        .forEach((String key, String? value) => queryParams.add('$key=$value'));
     return queryParams.join('&');
   }
 }
