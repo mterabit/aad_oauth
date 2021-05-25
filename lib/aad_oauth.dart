@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Authenticates a user with Azure Active Directory using OAuth2.0.
 class AadOAuth {
+  static const _keyFreshInstall = 'freshInstall';
+
   static Config _config;
   AuthStorage _authStorage;
   RequestCode _requestCode;
@@ -98,10 +100,20 @@ class AadOAuth {
 
   Future<void> _removeOldTokenOnFirstLogin() async {
     var prefs = await SharedPreferences.getInstance();
-    final _keyFreshInstall = 'freshInstall';
+
     if (!prefs.getKeys().contains(_keyFreshInstall)) {
       await logout();
       await prefs.setBool(_keyFreshInstall, false);
     }
+  }
+
+  Future<bool> isLocalTokenValid() async {
+    var token = await _authStorage.loadTokenFromCache();
+    return token.hasValidAccessToken();
+  }
+
+  Future<bool> isFreshInstallKeyExist() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getKeys().contains(_keyFreshInstall);
   }
 }
