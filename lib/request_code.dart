@@ -15,8 +15,8 @@ class RequestCode {
     _authorizationRequest = AuthorizationRequest(config);
   }
 
-  Future<String> requestCode() async {
-    String code;
+  Future<String?> requestCode() async {
+    String? code;
     final urlParams = _constructUrlParams();
 
     await _webView.launch(
@@ -54,7 +54,7 @@ class RequestCode {
     await _webView.close();
   }
 
-  Stream<String> get _onCode =>
+  Stream<String?> get _onCode =>
       _onCodeStream ??= _onCodeListener.stream.asBroadcastStream();
 
   String _constructUrlParams() =>
